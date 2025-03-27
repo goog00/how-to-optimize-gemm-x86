@@ -49,7 +49,10 @@ void AddDot1x4( int k, double *a, int lda,  double *b, int ldb, double *c, int l
        a_0p_reg;
   double 
     /* Point to the current elements in the four columns of B */
-  
+   /* 通过指针来优化内核中B( i, j ) b[ (j)*ldb + (i) ] 中乘法计算的性能问题
+       原本每访问一个元素都要做一次 p * ldb + j（一次乘法 + 加法）  | bp0_pntr = &B( 0, 0 );
+       现在只做了一次 p * ldb，剩下都是偏移（加法） | *bp0_pntr++;
+    */
     *bp0_pntr, *bp1_pntr, *bp2_pntr, *bp3_pntr; 
     
   bp0_pntr = &B( 0, 0 );

@@ -69,3 +69,16 @@ void AddDot1x4( int k, double *a, int lda,  double *b, int ldb, double *c, int l
 }
 
 
+/*
+性能优化的点：避免乘法
+ for ( p=0; p<k; p++ ){
+    a_0p_reg = A( 0, p );
+    
+    c_00_reg += a_0p_reg * B( p, 0 );     
+    c_01_reg += a_0p_reg * B( p, 1 );     
+    c_02_reg += a_0p_reg * B( p, 2 );     
+    c_03_reg += a_0p_reg * B( p, 3 );     
+  }
+ B( p, 0 )  b[ (j)*ldb + (i) ] ，内核中B( p, 0 ) 每次都要计算 p * ldb 这个偏移，开销比较大，这里可以通过指针的方式避免乘法计算。具体实现见MMult_1x4_7.c
+
+ */ 
